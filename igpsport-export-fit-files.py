@@ -3,6 +3,7 @@ import json
 import urllib.request
 import urllib.parse
 from datetime import datetime
+import getpass
 
 
 def fetch_activities(cookie, pageindex):
@@ -34,8 +35,8 @@ def main():
         cookie = input("请输入Cookie: ")
     elif login_method == '2':
         # Get user input for username and password
-        username = input("请输入用户名: ")
-        password = input("请输入密码: ")
+        username = input("请输入用户名:")
+        password = getpass.getpass("请输入密码:")  # Use getpass to hide password input
         # Perform login to get cookie
         cookie = login(username, password)
     else:
