@@ -8,14 +8,22 @@
 
 ## 使用流程
 
-1. 下载 Github Release 中的 exe 文件 或 `igpsport-export-fit-files.py`
-2. 双击打开 exe 文件，或者使用 `python igpsport-export-fit-files.py` 启动脚本
-3. 按照提示选择鉴权 `用户名/密码`（推荐） 或 `Cookie` 登录方式。
-4. 选择需要下载的时间范围，格式为 2023-01-01~2024-01-01，留空表示全部下载
-5. 等待，直到提示本次下载文件数量
-6. 在文件所在目录的 downloads 文件夹下即可找到下载的全部文件
+https://github.com/fooooxxxx/igpsport-export-fit-files/releases/latest
 
-> Cookie 需要打开浏览器的开发者窗口，复制带有`loginTicket=`，并粘贴回车
+### 下载并启动脚本
+
+如有 Python 环境可以直接下载 igpsport-export-fit-files.py，并使用 python igpsport-export-fit-files.py 启动脚本。
+
+如没有 Python 环境，请下载 igpsport-export-fit-files.zip，解压后打开 igpsport-export-fit-files.exe进行操作
+ 
+### 启动后操作流程
+
+1. 按照提示选择鉴权 `用户名/密码`（推荐） 或 `Cookie` 登录方式。
+2. 选择需要下载的时间范围，格式为 2023-01-01~2024-01-01，留空表示全部下载
+3. 等待直到提示本次下载文件数量
+4. 在脚本所在目录的 downloads 文件夹下即可找到下载的全部文件
+
+> Cookie 打开浏览器的开发者窗口，复制带有 `loginTicket=` 作为 Cookie
 
 ## 用例
 

@@ -31,7 +31,7 @@ jobs:
 
       - name: Build EXE
         run: |
-          pyinstaller --onefile igpsport-export-fit-files.py
+          pyinstaller igpsport-export-fit-files.py
 
       - name: Archive build artifacts
         if: always()
@@ -39,7 +39,7 @@ jobs:
         with:
           name: build-artifacts
           path: |
-            dist/igpsport-export-fit-files.exe
+            dist/igpsport-export-fit-files/
             igpsport-export-fit-files.py
 
   release:
@@ -55,6 +55,10 @@ jobs:
           name: build-artifacts
           path: .
 
+      - name: Create ZIP file
+        run: |
+          zip -r igpsport-export-fit-files.zip dist/igpsport-export-fit-files
+
       - name: Create Release
         id: create_release
         uses: actions/create-release@v1
@@ -66,15 +70,15 @@ jobs:
           draft: false
           prerelease: false
 
-      - name: Upload EXE to Release
+      - name: Upload ZIP to Release
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: dist/igpsport-export-fit-files.exe
-          asset_name: igpsport-export-fit-files.exe
-          asset_content_type: application/octet-stream
+          asset_path: igpsport-export-fit-files.zip
+          asset_name: igpsport-export-fit-files.zip
+          asset_content_type: application/zip
 
       - name: Upload Python Script to Release
         uses: actions/upload-release-asset@v1
