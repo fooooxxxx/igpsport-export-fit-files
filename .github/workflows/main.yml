@@ -68,6 +68,8 @@ jobs:
 
       - name: Upload EXE to Release
         uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
           asset_path: dist/igpsport-export-fit-files.exe
@@ -76,6 +78,8 @@ jobs:
 
       - name: Upload Python Script to Release
         uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
           asset_path: igpsport-export-fit-files.py
