@@ -14,8 +14,11 @@ def fetch_activities(cookie, pageindex):
         return json.loads(response.read().decode())
 
 
-def download_file(url, filename):
-    urllib.request.urlretrieve(url, filename)
+def download_file(url, filename, cookie):
+    req = urllib.request.Request(url)
+    req.add_header('Cookie', cookie)
+    with urllib.request.urlopen(req) as response, open(filename, 'wb') as out_file:
+        out_file.write(response.read())
 
 
 def login(username, password):
@@ -39,6 +42,9 @@ def main():
         password = getpass.getpass("请输入密码:")  # Use getpass to hide password input
         # Perform login to get cookie
         cookie = login(username, password)
+        if cookie is None:
+            print("用户名或密码错误")
+            return
     else:
         print("无效的选择")
         return
@@ -71,7 +77,7 @@ def main():
             if (start_date is None or start_date <= start_time) and (end_date is None or start_time <= end_date):
                 download_url = f"https://my.igpsport.com/fit/activity?type=0&rideid={ride_id}"
                 filename = f"downloads/{start_time_str}-{ride_id}.fit"
-                download_file(download_url, filename)
+                download_file(download_url, filename, cookie)
                 total_downloaded += 1
 
         pageindex += 1
