@@ -4,9 +4,6 @@ on:
   push:
     tags:
       - 'v*.*.*'  # 仅在推送标签时触发
-  pull_request:
-    branches:
-      - master
 
 permissions:
   contents: write
