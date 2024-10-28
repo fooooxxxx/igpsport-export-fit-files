@@ -1,5 +1,7 @@
 import os
 import json
+import random
+import time
 import urllib.request
 import urllib.parse
 from datetime import datetime
@@ -62,26 +64,33 @@ def main():
     os.makedirs("downloads", exist_ok=True)
 
     total_downloaded = 0
-    pageindex = 1
+    page = 1
 
-    while True:
-        data = fetch_activities(cookie, pageindex)
+    not_break = True
+
+    while not_break:
+        data = fetch_activities(cookie, page)
         if not data['item']:
             break
 
         for item in data['item']:
             ride_id = item['RideId']
-            start_time_str = item['StartTimeString']
-            start_time = datetime.strptime(start_time_str, "%Y-%m-%d")
+            record_time_str = item['StartTimeString']
+            record_time = datetime.strptime(record_time_str, "%Y-%m-%d")
+            if (start_date is not None) and (end_date is not None):
+                if record_time < start_date:
+                    not_break = False
+                    break
+                if record_time > end_date:
+                    continue
+            download_url = f"https://my.igpsport.com/fit/activity?type=0&rideid={ride_id}"
+            filename = f"downloads/{record_time_str}-{ride_id}.fit"
+            download_file(download_url, filename, cookie)
+            total_downloaded += 1
+            time.sleep(random.uniform(4, 6))  # Add random delay between downloads
 
-            if (start_date is None or start_date <= start_time) and (end_date is None or start_time <= end_date):
-                download_url = f"https://my.igpsport.com/fit/activity?type=0&rideid={ride_id}"
-                filename = f"downloads/{start_time_str}-{ride_id}.fit"
-                download_file(download_url, filename, cookie)
-                total_downloaded += 1
-
-        pageindex += 1
-
+        page += 1
+        time.sleep(random.uniform(0.5, 1))  # Add random delay between pages
     print(f"本次下载的文件数量: {total_downloaded}")
 
 
