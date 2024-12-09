@@ -2,6 +2,10 @@
 
 > 本脚本仅适用于可通过 https://my.igpsport.com/ 登录的中国大陆账号,不适用于 https://i.igpsport.com/
 
+## 提醒
+
+经过测试发现 igpsport 一天只能下载约50次fit文件, 超过50次之后下载到的fit文件会是空文件,更换cookie或IP后无法解决该问题。
+
 ## 功能简介
 
 按时间范围批量导出 igpsport 的 fit 文件到本地。
@@ -15,7 +19,7 @@ https://github.com/fooooxxxx/igpsport-export-fit-files/releases/latest
 如有 Python 环境可以直接下载 igpsport-export-fit-files.py，并使用 python igpsport-export-fit-files.py 启动脚本。
 
 如没有 Python 环境，请下载 igpsport-export-fit-files.zip，解压后打开 igpsport-export-fit-files.exe进行操作
- 
+
 ### 启动后操作流程
 
 1. 按照提示选择鉴权 `用户名/密码`（推荐） 或 `Cookie` 登录方式。
