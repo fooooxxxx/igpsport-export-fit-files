@@ -7,6 +7,8 @@ import urllib.parse
 from datetime import datetime
 import getpass
 
+import requests
+
 
 def fetch_activities(cookie, pageindex):
     url = f"https://my.igpsport.com/Activity/MyActivityList?pageindex={pageindex}"
@@ -23,12 +25,29 @@ def download_file(url, filename, cookie):
         out_file.write(response.read())
 
 
-def login(username, password):
-    url = "https://my.igpsport.com/Auth/Login"
-    data = urllib.parse.urlencode({'username': username, 'password': password}).encode()
-    req = urllib.request.Request(url, data=data)
+def login_username(username, password):
+    # Step 1: Get access token
+    url = "https://prod.zh.igpsport.com/service/auth/account/login"
+    data = json.dumps({'username': username, 'password': password, 'appId': 'igpsport-web'}).encode()
+    req = urllib.request.Request(url, data=data, headers={'Content-Type': 'application/json'})
+
     with urllib.request.urlopen(req) as response:
-        return response.headers['Set-Cookie']
+        response_data = json.loads(response.read().decode())
+        if response_data['code'] != 0:
+            print(response_data['message'])
+            return None
+        access_token = response_data['data']['access_token']
+
+    # Step 2: Use access token to get cookie
+    token_url = f"https://my.igpsport.com/auth/tokenlogin?token={access_token}"
+    headers = {
+        'Host': 'my.igpsport.com',
+        'Cookie': 'lang=zh',
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36',
+        'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7'
+    }
+    response = requests.get(token_url, headers=headers, allow_redirects=False)
+    return response.headers['Set-Cookie']
 
 
 def main():
@@ -43,7 +62,7 @@ def main():
         username = input("请输入用户名:")
         password = getpass.getpass("请输入密码:")  # Use getpass to hide password input
         # Perform login to get cookie
-        cookie = login(username, password)
+        cookie = login_username(username, password)
         if cookie is None:
             print("用户名或密码错误")
             return
