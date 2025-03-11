@@ -21,9 +21,13 @@ jobs:
         with:
           python-version: '3.x'
 
-      - name: Install PyInstaller
+      - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Install PyInstaller
+        run: |
           pip install pyinstaller
 
       - name: Build EXE
@@ -32,7 +36,7 @@ jobs:
 
       - name: Archive build artifacts
         if: always()
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: build-artifacts
           path: |
@@ -47,7 +51,7 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Download build artifacts
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v4
         with:
           name: build-artifacts
           path: .
