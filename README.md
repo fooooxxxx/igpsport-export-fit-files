@@ -41,6 +41,10 @@ https://help.trainingpeaks.com/hc/en-us/articles/204072034-Drag-and-Drop-to-Uplo
 
 ## 更新日志
 
+### 1.1.1
+
+- 由于 igpsport 活动接口不再直接提供 OSS 地址,而是需要访问一个接口获取下载地址,故1.1.0版本现在不可用,本版本修复了该问题
+
 ### 1.1.0
 
 - 更新活动记录查询接口

@@ -34,6 +34,26 @@ def fetch_activities(token, pageindex, start_date=None, end_date=None):
         return resp_json['data']
 
 
+def get_download_url(ride_id, token):
+    """
+    获取指定 rideId 的下载链接
+    """
+    url = f"https://prod.zh.igpsport.com/service/web-gateway/web-analyze/activity/getDownloadUrl/{ride_id}"
+    req = urllib.request.Request(url)
+    req.add_header('Authorization', "Bearer " + token)
+    try:
+        with urllib.request.urlopen(req) as response:
+            resp_json = json.loads(response.read().decode())
+            if resp_json['code'] != 0:
+                print(f"错误: 获取下载链接失败 (rideId: {ride_id}) {resp_json.get('message', '')}")
+                return None
+            # 返回下载链接
+            return resp_json['data']
+    except Exception as e:
+        print(f"错误: 获取下载链接异常 (rideId: {ride_id}) {str(e)}")
+        return None
+
+
 def download_file(url, filename, token):
     req = urllib.request.Request(url)
     req.add_header('Authorization', "Bearer " + token)
@@ -109,9 +129,13 @@ def main():
             start_time_str = item['startTime']  # 格式如"2023.05.27"
             # 统一文件名格式
             filename = f"downloads/{start_time_str.replace('.', '-')}-{ride_id}.fit"
-            fit_url = item.get('fitOssPath')
+
+            # 使用 rideId 获取下载链接
+            fit_url = get_download_url(ride_id, token)
             if not fit_url:
+                print(f"跳过: 无法获取下载链接 (rideId: {ride_id})")
                 continue
+
             download_file(fit_url, filename, token)
             downloaded_ride_ids.add(ride_id)  # 下载后加入集合
             total_downloaded += 1
